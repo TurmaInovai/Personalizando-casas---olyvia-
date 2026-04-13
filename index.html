@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Realista de Casa 2.0</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-compass-drafting"></i> 
+                <span>Simulador Realista <strong>3D/Planta Baixa</strong></span>
+            </div>
+            <div class="floor-selector">
+                <button class="floor-btn active" data-floor="1">Térreo (1º Andar)</button>
+                <button class="floor-btn" data-floor="2">2º Andar</button>
+            </div>
+            <button id="add-room-btn" class="add-room-btn"><i class="fa-solid fa-plus"></i> Novo Cômodo</button>
+        </header>
+
+        <main class="main-workspace">
+            <aside class="sidebar">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="build"><i class="fa-solid fa-hammer"></i> Construir</button>
+                    <button class="tab-btn" data-tab="kitchen"><i class="fa-solid fa-kitchen-set"></i> Cozinha</button>
+                    <button class="tab-btn" data-tab="living"><i class="fa-solid fa-couch"></i> Sala</button>
+                    <button class="tab-btn" data-tab="props"><i class="fa-solid fa-sliders"></i> Ajustes</button>
+                </div>
+
+                <div class="tab-content active" id="tab-build">
+                    <h3>Estrutural</h3>
+                    <div class="catalog-grid" id="catalog-build">
+                        <!-- Portas e Janelas -->
+                    </div>
+                    
+                    <h3 style="margin-top:20px;">Revestimentos (Piso do Cômodo)</h3>
+                    <div class="texture-palette" id="floor-textures">
+                        <div class="texture-swatch wood-light" data-bg="url('https://www.transparenttextures.com/patterns/wood-pattern.png'), linear-gradient(#e1b182, #c89564)"></div>
+                        <div class="texture-swatch wood-dark" data-bg="url('https://www.transparenttextures.com/patterns/wood-pattern.png'), linear-gradient(#5c4033, #3e2723)"></div>
+                        <div class="texture-swatch marble" data-bg="url('https://www.transparenttextures.com/patterns/marble.png'), white"></div>
+                        <div class="texture-swatch concrete" data-bg="url('https://www.transparenttextures.com/patterns/concrete-wall.png'), #95a5a6"></div>
+                        <div class="texture-swatch tile-kitchen" data-bg="repeating-conic-gradient(#bdc3c7 0% 25%, #ecf0f1 0% 50%) 50% / 40px 40px"></div>
+                        <div class="texture-swatch carpet" data-bg="url('https://www.transparenttextures.com/patterns/pinstriped-suit.png'), #74b9ff"></div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-kitchen">
+                    <h3>Móveis de Cozinha</h3>
+                    <div class="catalog-grid" id="catalog-kitchen"></div>
+                </div>
+
+                <div class="tab-content" id="tab-living">
+                    <h3>Móveis de Sala e Quartos</h3>
+                    <div class="catalog-grid" id="catalog-living"></div>
+                </div>
+
+                <div class="tab-content" id="tab-props">
+                    <div id="no-selection" class="empty-state">
+                        Selecione um móvel ou cômodo para editar.
+                    </div>
+                    <div id="selection-props" class="props-panel hidden">
+                        <h3><i class="fa-solid fa-pen-ruler"></i> Editando: <span id="prop-name">Item</span></h3>
+                        
+                        <div class="prop-control">
+                            <label>Tamanho (Escala) <span id="scale-val">1.0</span>x</label>
+                            <input type="range" id="prop-scale" min="0.3" max="3" step="0.1" value="1">
+                        </div>
+                        
+                        <div class="prop-control">
+                            <label>Rotação <span id="rotate-val">0</span>°</label>
+                            <input type="range" id="prop-rotate" min="0" max="360" step="15" value="0">
+                        </div>
+
+                        <div class="prop-control room-only hidden">
+                            <label>Cor da Parede</label>
+                            <input type="color" id="prop-wall-color" value="#333333">
+                        </div>
+
+                        <button id="btn-delete-item" class="danger-btn"><i class="fa-solid fa-trash"></i> Remover Item</button>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="canvas-container" id="canvas-container">
+                <div class="floor-layout active" id="floor-1">
+                    <!-- Cômodos serão injetados aqui -->
+                </div>
+                <div class="floor-layout hidden" id="floor-2">
+                    <!-- Cômodos 2o andar -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
