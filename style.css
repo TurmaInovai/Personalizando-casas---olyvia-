@@ -49,12 +49,12 @@ body {
     color: var(--accent);
 }
 
-.floor-selector {
+.house-selector {
     display: flex;
     gap: 10px;
 }
 
-.floor-btn {
+.house-btn {
     border: 1px solid #ccc;
     background: white;
     padding: 8px 16px;
@@ -63,10 +63,27 @@ body {
     font-weight: 500;
 }
 
-.floor-btn.active {
+.house-btn.active {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
+}
+
+.tour-btn {
+    background: #f39c12;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tour-btn:hover {
+    background: #e67e22;
 }
 
 .add-room-btn {
@@ -220,6 +237,15 @@ body {
 .icon-lamp { width: 25px; height: 25px; background: radial-gradient(circle, #f1c40f 40%, #f39c12); border-radius: 50%; box-shadow: 0 0 25px rgba(241,196,15,0.9); }
 .icon-plant { width: 35px; height: 35px; background: radial-gradient(circle, #2ecc71 30%, #27ae60); border-radius: 50%; border: 3px solid #229954; }
 
+/* Garden Icons */
+.icon-grass { width: 50px; height: 50px; background: #27ae60; border-radius: 4px; border: 2px solid #2ecc71; opacity: 0.6; }
+.icon-flower { width: 20px; height: 20px; border-radius: 50%; background: #e84393; box-shadow: 0 0 10px #fd79a8; position: relative; }
+.icon-flower::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 6px; height: 6px; background: #f1c40f; border-radius: 50%; }
+.icon-flower-blue { background: #0984e3; box-shadow: 0 0 10px #74b9ff; }
+.icon-flower-white { background: #ffffff; box-shadow: 0 0 10px #dfe6e9; }
+.icon-tree { width: 60px; height: 60px; background: radial-gradient(circle, #009432 40%, #006266); border-radius: 50%; border: 4px solid #1B1464; box-shadow: 5px 5px 15px rgba(0,0,0,0.3); }
+.icon-bench { width: 60px; height: 25px; background: #8e44ad; border: 3px solid #2c3e50; border-radius: 3px; }
+
 .item-label { font-size: 0.8rem; font-weight: 500; text-align: center;}
 
 /* Textures */
@@ -304,7 +330,7 @@ body {
     position: absolute;
     background: #ecf0f1;
     border: 8px solid var(--wall-color);
-    resize: both;
+    /* resize: both; REMOVED as per user request for ready houses */
     overflow: hidden;
     min-width: 100px;
     min-height: 100px;
@@ -331,15 +357,8 @@ body {
 
 .room-node::after {
     /* To make resize handle visible and stylized */
-    content: "◢";
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 20px; height: 20px;
-    cursor: se-resize;
-    color: var(--wall-color);
-    font-size: 14px;
-    pointer-events: none;
-    line-height: 20px; text-align: right; margin-right: 2px;
+    /* content: "◢"; REMOVED */
+    display: none;
 }
 
 /* Placed Objects */
@@ -363,6 +382,46 @@ body {
 
 .placed-item:active {
     cursor: grabbing;
+}
+
+/* Character Sprite */
+.character-sprite {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #e67e22;
+    border-radius: 50%;
+    z-index: 200;
+    transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border: 3px solid #d35400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.character-sprite::after {
+    content: "☺";
+    font-size: 24px;
+    color: white;
+}
+
+/* Destination Ping */
+.dest-ping {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f1c40f;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: ping 1s ease-out forwards;
+}
+
+@keyframes ping {
+    0% { transform: translate(-50%, -50%) scale(0.1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
 }
 
 .hidden { display: none !important; }

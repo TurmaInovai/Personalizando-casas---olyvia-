@@ -21,7 +21,38 @@ document.addEventListener('DOMContentLoaded', () => {
             { type: 'icon-table', name: 'Mesa', baseScale: 1.4 },
             { type: 'icon-lamp', name: 'Abajur', baseScale: 1.2 },
             { type: 'icon-plant', name: 'Planta', baseScale: 1.2 }
+        ],
+        garden: [
+            { type: 'icon-grass', name: 'Grama', baseScale: 1.0 },
+            { type: 'icon-flower', name: 'Rosa', baseScale: 1.0 },
+            { type: 'icon-flower icon-flower-blue', name: 'Flor Azul', baseScale: 1.0 },
+            { type: 'icon-flower icon-flower-white', name: 'Margarida', baseScale: 1.0 },
+            { type: 'icon-tree', name: 'Árvore', baseScale: 1.0 },
+            { type: 'icon-bench', name: 'Banco', baseScale: 1.0 }
         ]
+    };
+
+    const housePresets = {
+        compact: () => {
+             const room1 = createRoom('floor-1', 'Sala & Quarto', 300, 200, 400, 400, "url('https://www.transparenttextures.com/patterns/wood-pattern.png'), linear-gradient(#e1b182, #c89564)");
+             const garden = createRoom('floor-1', 'Jardim', 50, 150, 250, 500, "#2ecc71");
+             placeItem(room1, getCatalogItem('build', 'icon-door'), 0, 200, 1.2, -90);
+        },
+        comfort: () => {
+            const living = createRoom('floor-1', 'Sala', 300, 100, 400, 300, "white");
+            const bed = createRoom('floor-1', 'Quarto', 300, 400, 400, 300, "#74b9ff");
+            const garden = createRoom('floor-1', 'Jardim Frontal', 50, 100, 250, 600, "#27ae60");
+            placeItem(living, getCatalogItem('build', 'icon-door'), 0, 150, 1.2, -90);
+            placeItem(living, getCatalogItem('build', 'icon-door'), 200, 300, 1.2, 0);
+        },
+        garden: () => {
+            const hall = createRoom('floor-1', 'Hall', 400, 300, 200, 200, "white");
+            const l = createRoom('floor-1', 'Sala', 200, 100, 300, 300, "white");
+            const r = createRoom('floor-1', 'Quarto', 500, 100, 300, 300, "white");
+            const g1 = createRoom('floor-1', 'Jardim Esq', 50, 50, 150, 700, "#27ae60");
+            const g2 = createRoom('floor-1', 'Jardim Dir', 800, 50, 150, 700, "#27ae60");
+            placeItem(hall, getCatalogItem('build', 'icon-door'), 100, 200, 1.2, 0);
+        }
     };
 
     // --- State ---
@@ -29,6 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedNode = null;
     let draggedItemData = null;
     let roomCount = 0;
+    let isTourMode = false;
+    let character = null;
 
     // --- References ---
     const f1 = document.getElementById('floor-1');
@@ -48,9 +81,24 @@ document.addEventListener('DOMContentLoaded', () => {
     populateCatalog('catalog-build', catalogData.build);
     populateCatalog('catalog-kitchen', catalogData.kitchen);
     populateCatalog('catalog-living', catalogData.living);
+    populateCatalog('catalog-garden', catalogData.garden);
     
     // --- Autoload initial house ---
-    buildInitialHouse();
+    loadHouse('comfort');
+
+    function loadHouse(type) {
+        f1.innerHTML = '';
+        f2.innerHTML = '';
+        roomCount = 0;
+        isTourMode = false;
+        if(character) character.remove();
+        character = null;
+        document.getElementById('start-tour-btn').innerHTML = '<i class="fa-solid fa-person-walking"></i> Iniciar Passeio';
+
+        if(housePresets[type]) {
+            housePresets[type]();
+        }
+    }
 
     function populateCatalog(containerId, items) {
         const container = document.getElementById(containerId);
@@ -120,19 +168,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Floors ---
-    document.querySelectorAll('.floor-btn').forEach(btn => {
+    // --- House Selection ---
+    document.querySelectorAll('.house-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.floor-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.house-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const targetFloor = `floor-${btn.dataset.floor}`;
-            activeFloor = targetFloor;
-            f1.classList.add('hidden');
-            f2.classList.add('hidden');
-            document.getElementById(targetFloor).classList.remove('hidden');
-            deselectAll();
+            loadHouse(btn.dataset.house);
         });
     });
+
+    // --- Tour Mode ---
+    document.getElementById('start-tour-btn').addEventListener('click', (e) => {
+        isTourMode = !isTourMode;
+        const btn = e.currentTarget;
+        
+        if(isTourMode) {
+            btn.innerHTML = '<i class="fa-solid fa-stop"></i> Parar Passeio';
+            btn.style.background = '#e74c3c';
+            deselectAll();
+            spawnCharacter();
+        } else {
+            btn.innerHTML = '<i class="fa-solid fa-person-walking"></i> Iniciar Passeio';
+            btn.style.background = '#f39c12';
+            if(character) character.remove();
+            character = null;
+        }
+    });
+
+    function spawnCharacter() {
+        if(character) character.remove();
+        character = document.createElement('div');
+        character.className = 'character-sprite';
+        // Start at a default position (e.g., inside first room or center)
+        character.style.left = '400px';
+        character.style.top = '400px';
+        document.getElementById(activeFloor).appendChild(character);
+    }
+
+    // --- Floors ---
 
     // --- Textures ---
     document.querySelectorAll('.texture-swatch').forEach(sw => {
@@ -150,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.addEventListener('dragover', e => e.preventDefault());
         canvas.addEventListener('drop', e => {
             e.preventDefault();
-            if(!draggedItemData) return;
+            if(!draggedItemData || isTourMode) return;
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -172,6 +245,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         canvas.addEventListener('mousedown', (e) => {
+            if(isTourMode && character) {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Move character
+                character.style.left = `${x}px`;
+                character.style.top = `${y}px`;
+                
+                // Create ping
+                const ping = document.createElement('div');
+                ping.className = 'dest-ping';
+                ping.style.left = `${x}px`;
+                ping.style.top = `${y}px`;
+                canvas.appendChild(ping);
+                setTimeout(() => ping.remove(), 1000);
+                return;
+            }
             if(e.target === canvas) deselectAll();
         });
     });
@@ -310,6 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let pX, pY;
 
         el.addEventListener('mousedown', (e) => {
+            if(isTourMode) return;
             selectNode(el);
             isDragging = true;
             // Get offset inside parent
@@ -334,14 +426,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let pX, pY;
 
         el.addEventListener('mousedown', (e) => {
+            if(isTourMode) return;
             selectNode(el);
             const rect = el.getBoundingClientRect();
             if(e.clientX > rect.right - 20 && e.clientY > rect.bottom - 20) return; // Resize handle
             if(e.target.closest('.placed-item')) return; // Ignore drag if child item is clicked
             
-            isDragging = true;
-            pX = e.clientX - el.offsetLeft;
-            pY = e.clientY - el.offsetTop;
+            // isDragging = false; // HOUSE COMODOS ARE LOCKED
+            // Only allow selection to change colors
         });
 
         document.addEventListener('mousemove', (e) => {

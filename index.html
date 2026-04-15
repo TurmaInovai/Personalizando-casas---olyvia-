@@ -11,15 +11,15 @@
 <body>
     <div id="app">
         <header class="app-header">
-            <div class="logo">
-                <i class="fa-solid fa-compass-drafting"></i> 
-                <span>Simulador Realista <strong>3D/Planta Baixa</strong></span>
+            <div class="house-selector">
+                <button class="house-btn" data-house="compact">Casa Compacta</button>
+                <button class="house-btn" data-house="comfort">Casa Conforto</button>
+                <button class="house-btn" data-house="garden">Mansão Jardim</button>
             </div>
-            <div class="floor-selector">
-                <button class="floor-btn active" data-floor="1">Térreo (1º Andar)</button>
-                <button class="floor-btn" data-floor="2">2º Andar</button>
+            <div class="header-actions">
+                <button id="add-room-btn" class="add-room-btn hidden"><i class="fa-solid fa-plus"></i> Novo Cômodo</button>
+                <button id="start-tour-btn" class="tour-btn"><i class="fa-solid fa-person-walking"></i> Iniciar Passeio</button>
             </div>
-            <button id="add-room-btn" class="add-room-btn"><i class="fa-solid fa-plus"></i> Novo Cômodo</button>
         </header>
 
         <main class="main-workspace">
@@ -28,6 +28,7 @@
                     <button class="tab-btn active" data-tab="build"><i class="fa-solid fa-hammer"></i> Construir</button>
                     <button class="tab-btn" data-tab="kitchen"><i class="fa-solid fa-kitchen-set"></i> Cozinha</button>
                     <button class="tab-btn" data-tab="living"><i class="fa-solid fa-couch"></i> Sala</button>
+                    <button class="tab-btn" data-tab="garden"><i class="fa-solid fa-seedling"></i> Jardim</button>
                     <button class="tab-btn" data-tab="props"><i class="fa-solid fa-sliders"></i> Ajustes</button>
                 </div>
 
@@ -56,6 +57,11 @@
                 <div class="tab-content" id="tab-living">
                     <h3>Móveis de Sala e Quartos</h3>
                     <div class="catalog-grid" id="catalog-living"></div>
+                </div>
+
+                <div class="tab-content" id="tab-garden">
+                    <h3>Itens de Jardim</h3>
+                    <div class="catalog-grid" id="catalog-garden"></div>
                 </div>
 
                 <div class="tab-content" id="tab-props">
