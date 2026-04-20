@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { type: 'icon-plant', name: 'Planta', baseScale: 1.2 }
         ],
         garden: [
-            { type: 'icon-grass', name: 'Grama', baseScale: 1.0 },
+
             { type: 'icon-flower', name: 'Rosa', baseScale: 1.0 },
             { type: 'icon-flower icon-flower-blue', name: 'Flor Azul', baseScale: 1.0 },
             { type: 'icon-flower icon-flower-white', name: 'Margarida', baseScale: 1.0 },
@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const housePresets = {
         compact: () => {
-             const room1 = createRoom('floor-1', 'Sala & Quarto', 300, 200, 400, 400, "url('https://www.transparenttextures.com/patterns/wood-pattern.png'), linear-gradient(#e1b182, #c89564)");
-             const garden = createRoom('floor-1', 'Jardim', 50, 150, 250, 500, "#2ecc71");
-             placeItem(room1, getCatalogItem('build', 'icon-door'), 0, 200, 1.2, -90);
+            const room1 = createRoom('floor-1', 'Sala & Quarto', 300, 200, 400, 400, "url('https://www.transparenttextures.com/patterns/wood-pattern.png'), linear-gradient(#e1b182, #c89564)");
+            const garden = createRoom('floor-1', 'Jardim', 50, 150, 250, 500, "#2ecc71");
+            placeItem(room1, getCatalogItem('build', 'icon-door'), 0, 200, 1.2, -90);
         },
         comfort: () => {
             const living = createRoom('floor-1', 'Sala', 300, 100, 400, 300, "white");
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateCatalog('catalog-kitchen', catalogData.kitchen);
     populateCatalog('catalog-living', catalogData.living);
     populateCatalog('catalog-garden', catalogData.garden);
-    
+
     // --- Autoload initial house ---
     loadHouse('comfort');
 
@@ -91,11 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
         f2.innerHTML = '';
         roomCount = 0;
         isTourMode = false;
-        if(character) character.remove();
+        if (character) character.remove();
         character = null;
         document.getElementById('start-tour-btn').innerHTML = '<i class="fa-solid fa-person-walking"></i> Iniciar Passeio';
 
-        if(housePresets[type]) {
+        if (housePresets[type]) {
             housePresets[type]();
         }
     }
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
-            if(btn.dataset.tab === 'props' && !selectedNode) {
+            if (btn.dataset.tab === 'props' && !selectedNode) {
                 noSelection.classList.remove('hidden');
                 selectionProps.classList.add('hidden');
             }
@@ -181,8 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('start-tour-btn').addEventListener('click', (e) => {
         isTourMode = !isTourMode;
         const btn = e.currentTarget;
-        
-        if(isTourMode) {
+
+        if (isTourMode) {
             btn.innerHTML = '<i class="fa-solid fa-stop"></i> Parar Passeio';
             btn.style.background = '#e74c3c';
             deselectAll();
@@ -190,13 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             btn.innerHTML = '<i class="fa-solid fa-person-walking"></i> Iniciar Passeio';
             btn.style.background = '#f39c12';
-            if(character) character.remove();
+            if (character) character.remove();
             character = null;
         }
     });
 
     function spawnCharacter() {
-        if(character) character.remove();
+        if (character) character.remove();
         character = document.createElement('div');
         character.className = 'character-sprite';
         // Start at a default position (e.g., inside first room or center)
@@ -223,11 +223,11 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.addEventListener('dragover', e => e.preventDefault());
         canvas.addEventListener('drop', e => {
             e.preventDefault();
-            if(!draggedItemData || isTourMode) return;
+            if (!draggedItemData || isTourMode) return;
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
+
             // Allow dropping onto rooms directly
             let targetContainer = canvas;
             let targetX = x;
@@ -245,15 +245,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         canvas.addEventListener('mousedown', (e) => {
-            if(isTourMode && character) {
+            if (isTourMode && character) {
                 const rect = canvas.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                
+
                 // Move character
                 character.style.left = `${x}px`;
                 character.style.top = `${y}px`;
-                
+
                 // Create ping
                 const ping = document.createElement('div');
                 ping.className = 'dest-ping';
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => ping.remove(), 1000);
                 return;
             }
-            if(e.target === canvas) deselectAll();
+            if (e.target === canvas) deselectAll();
         });
     });
 
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         room.style.top = `${y}px`;
         room.style.background = bg;
         room.dataset.name = name;
-        
+
         const label = document.createElement('div');
         label.className = 'room-label';
         label.innerText = name;
@@ -304,14 +304,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function placeItem(container, data, x, y, scale = data.baseScale, rotate = 0) {
         const item = document.createElement('div');
         item.className = `placed-item ${data.type}`;
-        if(data.type === 'icon-window' || data.type === 'icon-door') {
-           item.classList.add('window-item'); 
+        if (data.type === 'icon-window' || data.type === 'icon-door') {
+            item.classList.add('window-item');
         }
-        
+
         item.dataset.scale = scale;
         item.dataset.rotate = rotate;
         item.dataset.name = data.name;
-        
+
         updateTransform(item);
         item.style.left = `${x}px`;
         item.style.top = `${y}px`;
@@ -333,8 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedNode = node;
         node.classList.add('selected');
         openPropsTab();
-        
-        if(node.classList.contains('room-node')) {
+
+        if (node.classList.contains('room-node')) {
             propName.innerText = node.dataset.name || "Cômodo";
             propWallColorContainer.classList.remove('hidden');
             rotateSlider.parentElement.classList.add('hidden');
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Properties Panel Events ---
     scaleSlider.addEventListener('input', (e) => {
-        if(selectedNode && !selectedNode.classList.contains('room-node')) {
+        if (selectedNode && !selectedNode.classList.contains('room-node')) {
             selectedNode.dataset.scale = e.target.value;
             scaleVal.innerText = e.target.value;
             updateTransform(selectedNode);
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     rotateSlider.addEventListener('input', (e) => {
-        if(selectedNode && !selectedNode.classList.contains('room-node')) {
+        if (selectedNode && !selectedNode.classList.contains('room-node')) {
             selectedNode.dataset.rotate = e.target.value;
             rotateVal.innerText = e.target.value;
             updateTransform(selectedNode);
@@ -383,13 +383,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     wallColorInput.addEventListener('input', (e) => {
-        if(selectedNode && selectedNode.classList.contains('room-node')) {
+        if (selectedNode && selectedNode.classList.contains('room-node')) {
             selectedNode.style.borderColor = e.target.value;
         }
     });
 
     btnDelete.addEventListener('click', () => {
-        if(selectedNode) {
+        if (selectedNode) {
             selectedNode.remove();
             deselectAll();
         }
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let pX, pY;
 
         el.addEventListener('mousedown', (e) => {
-            if(isTourMode) return;
+            if (isTourMode) return;
             selectNode(el);
             isDragging = true;
             // Get offset inside parent
@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('mousemove', (e) => {
-            if(!isDragging) return;
+            if (!isDragging) return;
             el.style.left = `${e.clientX - pX}px`;
             el.style.top = `${e.clientY - pY}px`;
         });
@@ -426,18 +426,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let pX, pY;
 
         el.addEventListener('mousedown', (e) => {
-            if(isTourMode) return;
+            if (isTourMode) return;
             selectNode(el);
             const rect = el.getBoundingClientRect();
-            if(e.clientX > rect.right - 20 && e.clientY > rect.bottom - 20) return; // Resize handle
-            if(e.target.closest('.placed-item')) return; // Ignore drag if child item is clicked
-            
+            if (e.clientX > rect.right - 20 && e.clientY > rect.bottom - 20) return; // Resize handle
+            if (e.target.closest('.placed-item')) return; // Ignore drag if child item is clicked
+
             // isDragging = false; // HOUSE COMODOS ARE LOCKED
             // Only allow selection to change colors
         });
 
         document.addEventListener('mousemove', (e) => {
-            if(!isDragging) return;
+            if (!isDragging) return;
             el.style.left = `${e.clientX - pX}px`;
             el.style.top = `${e.clientY - pY}px`;
         });
